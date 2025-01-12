@@ -1,13 +1,26 @@
+---
+const { 
+	description = "Aeromaps is a fully interactable web map for Aeronautica with full documentation on airports, regions and more.",
+	title = "Aeromaps",
+	lang = "en",
+} = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Aeromaps</title>
+		<meta content={title} property="og:title" />
+		<meta content={description} property="og:description" />
+		<meta content="https://aeronautimaps.com/map" property="og:url" />
+		<meta name="theme-color" content="#67b0f0">
+		<slot name="header-data" />
 	</head>
-	<body>
+	<body class="bg-black text-white">
 		<slot />
 	</body>
 </html>

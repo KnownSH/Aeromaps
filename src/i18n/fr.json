@@ -1,0 +1,16 @@
+{
+  "main.contribute": "Contribuer à Aeromaps",
+  "main.watermark": "Un projet de derg.space",
+
+  "infobox.information": "Information générale",
+  "infobox.icao": "Code OACI",
+  "infobox.based": "Basé sur",
+  "infobox.location": "Localisation",
+  "infobox.elevation": "Élévation",
+  "infobox.runway_info": "Informations sur les pistes",
+  "infobox.runway_num": "Numéros de piste",
+  "infobox.length": "Longueur",
+  "infobox.trello": "Carte Trello",
+  "infobox.info_hover": "INFO:",
+  "infobox.info": "Ce logo n'est pas officiel et n'est pas canon."
+}

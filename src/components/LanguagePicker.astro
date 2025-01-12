@@ -1,0 +1,23 @@
+---
+export const prerender = false;
+import { languages } from "../i18n/ui";
+
+const { languageChoosen = "en" } = Astro.props;
+---
+
+<ul class="mr-auto w-56">
+  {Object.entries(languages).map(([lang, label]) => {
+    if (lang != languageChoosen) {
+      return (<li>
+        <a href={`/maps?lang=${lang}`}>{label}</a>
+      </li>)
+    }
+  })}
+</ul>
+
+<style lang="less">
+  a {
+    font-size: 0.8rem;
+    height: auto;
+  }
+</style>

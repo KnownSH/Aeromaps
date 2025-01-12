@@ -1,0 +1,219 @@
+---
+export const prerender = false;
+
+import Layout from "../layouts/Layout.astro";
+import AeroMapEmbedImage from "../assets/aeromaps-preview.png";
+import AeroMap from "../components/aeromap/AeroMap";
+import Image from "astro/components/Image.astro";
+import Dorg from "../assets/Dorg.png";
+import LanguagePicker from "../components/LanguagePicker.astro";
+import { getLangFromUrl, useTranslation } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslation(lang);
+---
+
+<Layout title="Aeromaps Interactive Map" lang={lang}>
+  <Fragment slot="header-data">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/lightgallery@2.8.2/css/lightgallery-bundle.min.css" />
+    <meta property="og:type" content="article">
+    <meta name="og:site_name" content="Aeromaps"></meta>
+    <meta property="og:image" content={AeroMapEmbedImage.src}>
+    <meta property="og:image:width" content="3000">
+    <meta property="og:image:height" content="1000">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:src" content={AeroMapEmbedImage.src}>
+  </Fragment>
+  <header id="logo" class="flex mt-3 p-3 text-center">
+    <LanguagePicker languageChoosen={lang} />
+    <img class="h-12 m-auto" src={`/aeromap-logos/${t("main.logo.url")}`} alt="Aeromaps" />
+    <section class="flex ml-auto">
+      <a href="/" class="font-thin text-xs hover:text-blue-400">{t("main.watermark")}</a>
+      <Image class="w-[70px] object-contain"src={Dorg} alt="dorg"/>
+    </section>
+  </header>
+  <AeroMap client:only="react" server:defer lang={lang}/>
+  <footer class="mr-auto ml-auto mt-3 text-center">
+    <a href="https://derg.space/contribute/airports">{t("main.contribute")}</a>
+  </footer>
+</Layout>
+
+<style is:inline lang="less">
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+  #modal.open {
+    right: 0;
+  }
+
+  .icon-info {
+    bottom: 0;
+    right: 0;
+    font-size: 12px;
+    cursor: help;
+    padding: 1px;
+    background-color: black;
+    position: absolute;
+  }
+
+  .icon-info:hover::after {
+    content: attr(title);
+  }
+
+  .logo-container {
+    position: relative;
+  }
+
+  #modal {
+    position: absolute;
+    right: -22rem;
+    width: 22rem;
+    height: 100%;
+    background-color: black;
+    border-left-width: 2px;
+    border-color: white;
+    z-index: 1001;
+    transition: right 0.3s ease-in-out;
+    overflow-y: auto;
+    padding: 1rem;
+
+    &-content {
+      padding: 20px;
+    }
+
+    h2 {
+      font-weight: 900;
+      font-size: larger;
+    }
+
+    .infobox-image {
+      border: 2px white solid;
+    }
+
+    a {
+      font-weight: bold;
+      &:hover {
+        color: #449abd;
+      }
+    }
+
+    .infobox-table {
+      width: 100%;
+      margin-top: 10px;
+      .infobox-label {
+        font-weight: 900;
+        padding-right: 0.3rem;
+      }
+      .infobox-header {
+        margin: auto;
+        text-align: center;
+      }
+    }
+  }
+
+  .infobox-logo {
+    border: 2px solid white;
+    margin-bottom: 2px;
+    background-color: white;
+    max-height: 150px;
+    margin-right: auto;
+    margin-left: auto;
+    object-fit: contain;
+    width: 100%;
+  }
+
+  .trello-card {
+    position: fixed;
+    margin-top: 1rem;
+  }
+
+  * {
+    font-family: "JetBrains Mono", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+  }
+
+  #map {
+    height: 82%;
+    width: 100%;
+    margin: auto;
+  }
+
+  .uiElement {
+    color: black !important;
+  }
+
+  .title {
+    font-weight: 800;
+  }
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 0px;
+    box-shadow: none;
+    border-width: 2px;
+    border-color: white;
+    background-color: black;
+    color: white;
+  }
+
+  .leaflet-touch .leaflet-bar a:first-child,
+  .leaflet-touch .leaflet-bar a:last-child {
+    border-radius: 0px;
+  }
+
+  .leaflet-bar {
+    border-color: rgba(255, 255, 255, 1.0) !important;
+    border-radius: 0px;
+  }
+
+  .leaflet-control-attribution {
+    background-color: black !important;
+    border-top-width: 2px;
+    border-left-width: 2px;
+    border-color: white;
+  }
+
+  .leaflet-div-icon {
+    background: none;
+    border: none;
+    b {
+      margin: auto;
+      text-align: center;
+      text-wrap: none;
+    }
+  }
+
+  a.leaflet-control-zoom-in, a.leaflet-control-zoom-out {
+    background-color: black;
+    border-color: white;
+    border-bottom: none;
+    span {
+      color: white;
+    }
+  }
+
+  .leaflet-popup-tip {
+    box-shadow: none;
+  }
+
+  .leaflet-popup-close-button {
+    span {
+      color: white
+    }
+  }
+
+  .leaflet-popup-content:has(img) {
+    margin: 0px;
+    width: inherit !important;
+
+    img {
+      max-width: none;
+    }
+  }
+
+  .leaflet-control-attribution {
+    color: white;
+  }
+
+</style>
