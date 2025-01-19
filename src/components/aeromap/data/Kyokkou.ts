@@ -8,7 +8,7 @@ const Kyokkou= createRegion({
         -54.472694,
         -117.879849
       ],
-      icao: "RKUB",
+      icao: "RJUB",
       logo: "/aeromap-logos/Umibutsu.png",
       name: "airport.umibutsu",
       location: {

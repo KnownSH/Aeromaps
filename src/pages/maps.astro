@@ -4,13 +4,15 @@ export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import AeroMapEmbedImage from "../assets/aeromaps-preview.png";
 import AeroMap from "../components/aeromap/AeroMap";
-import Image from "astro/components/Image.astro";
-import Dorg from "../assets/Dorg.png";
-import LanguagePicker from "../components/LanguagePicker.astro";
+import NewMap from "../components/aeromap/NewMap";
+import LanguagePicker from "../components/LanguagePicker.tsx";
 import { getLangFromUrl, useTranslation } from "../i18n/utils";
+import Credits from "../components/Credits.tsx";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslation(lang);
+
+const location = Astro.url.hostname;
 ---
 
 <Layout title="Aeromaps Interactive Map" lang={lang}>
@@ -26,16 +28,23 @@ const t = useTranslation(lang);
     <meta name="twitter:image:src" content={AeroMapEmbedImage.src}>
   </Fragment>
   <header id="logo" class="flex mt-3 p-3 text-center">
-    <LanguagePicker languageChoosen={lang} />
-    <img class="h-12 m-auto" src={`/aeromap-logos/${t("main.logo.url")}`} alt="Aeromaps" />
+    <LanguagePicker client:only="react" languageChoosen={lang} />
+    <section>
+      <img class="h-12 m-auto" src={`/aeromap-logos/${t("main.logo.url")}`} alt="Aeromaps" />
+      <h1 class="text-orange-300 font-black">{location == "localhost" ? "🔨 Development Preview (Not on actual website) 🔨" : ""}</h1>
+    </section>
     <section class="flex ml-auto">
       <a href="/" class="font-thin text-xs hover:text-blue-400">{t("main.watermark")}</a>
-      <Image class="w-[70px] object-contain"src={Dorg} alt="dorg"/>
+      <!--Image class="w-[70px] object-contain"src={Dorg} alt="dorg"/-->
     </section>
   </header>
+  <!--NewMap client:only="react" -->
   <AeroMap client:only="react" server:defer lang={lang}/>
   <footer class="mr-auto ml-auto mt-3 text-center">
-    <a href="https://derg.space/contribute/airports">{t("main.contribute")}</a>
+    <section>
+      <a href="https://derg.space/contribute/airports">{t("main.contribute")}</a>
+      <Credits lang={lang} client:only="react"/>
+    </section>
   </footer>
 </Layout>
 
@@ -203,17 +212,46 @@ const t = useTranslation(lang);
     }
   }
 
+  .leaflet-div-icon h2 {
+    display: inline-block;
+    transform: translate(-50%, -50%);
+    text-shadow: black 1px;
+  }
+
   .leaflet-popup-content:has(img) {
     margin: 0px;
     width: inherit !important;
 
     img {
+      height: 250px;
       max-width: none;
     }
+      
   }
 
   .leaflet-control-attribution {
     color: white;
   }
+  .base-MenuButton-root {
+    margin-left: auto;
+    z-index: 2000;
+  }
+  .base-Menu-listbox {
+    background-color: black;
+    border: 2px white solid;
+    z-index: 2000;
+    position: relative;
+  }
 
+  .leaflet-control {
+    z-index: 100 !important;
+  }
+
+  .leaflet-pane {
+    z-index: 0 !important;
+  }
+
+  .leaflet-top {
+    z-index: 110 !important;
+  }
 </style>

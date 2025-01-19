@@ -32,7 +32,7 @@ const Eisenyarsk = createRegion({
       image_url: "/aeromap-assets/varyag.png",
       trello_card: "https://trello.com/c/dE4jOfKI",
       elevation: 19,
-      runway_length: 0,
+      runway_length: 305,
       location: {
         region: "region.r.eisenyarsk",
         subregion: "region.sr.tselinoyarsk",

@@ -1,0 +1,148 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout
+  title="Aeromap Contributors"
+  description="Add a missing airport to Aeronautimap"
+>
+  <h1>Submit a Airport for Aeromap</h1>
+  <form>
+    <div>
+      <label for="airportName">Name of Airport:</label>
+      <input
+        type="text"
+        id="airportName"
+        name="airportName"
+        placeholder="e.g., Webley Island Airfield"
+        required
+      />
+      <small>Properly capitalized.</small>
+    </div>
+    <div>
+      <label for="airportId">Airport ID:</label>
+      <input
+        type="text"
+        id="airportId"
+        name="airportId"
+        placeholder="e.g., webley"
+        required
+      />
+      <small>Lowercase identifier.</small>
+    </div>
+    <div>
+      <label for="icaoCode">ICAO Airport Code:</label>
+      <input
+        type="text"
+        id="icaoCode"
+        name="icaoCode"
+        placeholder="e.g., EGWJ"
+        required
+      />
+    </div>
+    <div class="autosuggest-container">
+      <label>Airport Location:</label>
+      <div>
+        <label for="region">Region:</label>
+        <input
+          type="text"
+          id="region"
+          name="region"
+          placeholder="Region name, e.g. 'Eastern Region'"
+          autocomplete="off"
+          required
+        />
+        <div
+          id="regionSuggestions"
+          class="autosuggest-dropdown"
+          style="display:none;"
+        >
+        </div>
+      </div>
+      <div>
+        <label for="subregion">Subregion:</label>
+        <input
+          type="text"
+          id="subregion"
+          name="subregion"
+          placeholder="Subregion name, e.g. 'East Anglia'"
+          autocomplete="off"
+          required
+        />
+        <div
+          id="subregionSuggestions"
+          class="autosuggest-dropdown"
+          style="display:none;"
+        >
+        </div>
+      </div>
+      <div>
+        <label for="town">Town:</label>
+        <input
+          type="text"
+          id="town"
+          name="town"
+          placeholder="Town name, e.g. 'Webley'"
+          autocomplete="off"
+          required
+        />
+        <div
+          id="townSuggestions"
+          class="autosuggest-dropdown"
+          style="display:none;"
+        >
+        </div>
+      </div>
+    </div>
+    <button>Submit</button>
+  </form>
+</Layout>
+
+<style lang="less" is:inline>
+  .rjsf {
+    margin: 0 20%;
+  }
+
+  legend {
+    font-size: x-large;
+    font-family: "silkscreen", sans-serif;
+    font-weight: bold;
+  }
+
+  .control-label {
+    font-family: "silkscreen", sans-serif;
+    padding-right: 0.5rem;
+  }
+
+  .form-group {
+    padding-top: 1.5rem;
+  }
+
+  .form-control {
+    margin-top: 0.3rem;
+    color: white;
+    background-color: black;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 0.4rem;
+  }
+
+  .btn-info {
+    background-color: white;
+    color: black;
+    margin: auto;
+    padding: 1rem;
+    font-family: "silkscreen";
+    font-weight: bold;
+    width: 100%;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+  }
+
+  pre,
+  code {
+    margin: 0 20%;
+    padding-bottom: 2rem;
+  }
+</style>
