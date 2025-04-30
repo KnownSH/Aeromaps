@@ -1,7 +1,7 @@
 import React from "react";
 import * as L from 'leaflet';
 import type { AirportData, LocationData, RegionData } from "./types/MapTypes";
-import { airportMarker, crateMarker, hiddenAirportMarker, smallAirportMarker } from "./MapIcons";
+import { airportMarker, crateMarker, hiddenAirportMarker, markerMap, smallAirportMarker } from "./MapIcons";
 import type { defaultLang, ui } from "@/i18n/ui"
 
 type LanguageToken = keyof typeof ui[typeof defaultLang];
@@ -72,7 +72,7 @@ const AirportMarker: React.FC<AirportMarkerProps> = ({ airportMarkers, airport, 
   const createInfoBox = (localizedName: string) => {
     const content = `
       <div class="infobox">
-        <h2 class="infobox-title">${localizedName}</h2>
+        <h2 class="infobox-title">${localizedName}${airport.nodata ? `*<br/><span class="nodata">*${t("infobox.nodata")}</span>` : ""}</h2>
         <section id="gallery">
           ${airport.logo ? logoLabel(airport.logo, localizedName, t, airport.unofficial_logo) : ""}
           <a href=${image_url}>
@@ -126,7 +126,7 @@ const AirportMarker: React.FC<AirportMarkerProps> = ({ airportMarkers, airport, 
   const localizedName = t(name as LanguageToken);
 
   const marker = L.marker(coordinates as L.LatLngExpression, {
-    icon: marker_icon == "airport" ? airportMarker : marker_icon == "crate" ? crateMarker : marker_icon == "hidden_airport" ? hiddenAirportMarker : smallAirportMarker
+    icon: markerMap[marker_icon] as L.Icon,
   }).bindPopup(`${localizedName} <b>(${icao})</b>`).addTo(airportMarkers);
 
   marker.on('click', (e) => {

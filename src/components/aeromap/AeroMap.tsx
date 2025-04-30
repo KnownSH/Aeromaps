@@ -9,6 +9,8 @@ import PhotoSwipeLightbox from 'photoswipe/lightbox'
 import pswpModule from 'photoswipe';
 import '@luomus/leaflet-smooth-wheel-zoom';
 import 'photoswipe/style.css';
+import type { CrateData, CrateDataGroup } from "./types/MapTypes";
+import { parse } from "postcss";
 
 const AeroMapConfig = {
   crs: L.CRS.EPSG3857,
@@ -42,9 +44,36 @@ const loadTrelloEmbed = () => {
   checkTrelloCards();
 };
 
+const getHashParams = () => {
+  const hash = window.location.hash;
+  if (!hash) return {
+    zoom: 3.0,
+    position: [0.0, 0.0],
+  };
+
+  const parts = hash.substring(1).split('/');
+  if (parts[0] === "data" && parts.length === 4) return {
+    zoom: parseFloat(parts[1]),
+    position: [
+      parseFloat(parts[2]),
+      parseFloat(parts[3]),
+    ]
+  };
+
+  return {
+    zoom: 3.0,
+    position: [0.0, 0.0],
+  };
+};
+
+const pushPositionHash = (zoom: number, latitude: number, longitude: number) => {
+  window.location.hash = `#data/${zoom}/${latitude}/${longitude}`;
+}
+
 const AeroMap = ({ lang }: Params) => {
   useEffect(() => {
     const t: any = useTranslation(lang);
+    const { zoom, position } = getHashParams();
 
     const map = L.map('map', {
       scrollWheelZoom: false,
@@ -116,7 +145,7 @@ const AeroMap = ({ lang }: Params) => {
           bounds: [[12.411103, -26.161945], [2.453799, -21.541447]],
         }),
       ]
-    }).setView([0, 0], 3);
+    }).setView(position as L.LatLngExpression, zoom);
 
     const imageTemp = new L.ImageOverlay("/Udyanapuraplaceholder.png", [[-57.232541, -95.954311], [-39.665297, -70.740984]]).addTo(map);
     
@@ -166,6 +195,17 @@ const AeroMap = ({ lang }: Params) => {
     const crateMarkers = new L.FeatureGroup();
     const airportMarkers = new L.FeatureGroup();
 
+    let crateResolveLayers = new Map<number, L.FeatureGroup>();
+
+    const createCrateMarker = (crate: CrateData, resolveValue: L.FeatureGroup, crateURL: string) => {
+      const coordinates = crate.coordinates as L.LatLngExpression;
+      const marker = L.marker(coordinates, {
+        icon: crateMarker,
+      })
+      .bindPopup(`<div id="gallery"><img class="crate-image" src=${crateURL}${crate.image_url} alt=${crate.alt}>${crate.description ?? crate.alt ?? ""}</img></div>`)
+      .addTo(resolveValue);
+    };
+
     for (const region of AllRegions) {
       if (region.airports && region.airports.length > 0) {
         for (const airport of region.airports) {
@@ -182,22 +222,49 @@ const AeroMap = ({ lang }: Params) => {
 
       if (region.crates && region.crates.length > 0) {
         for (const crate of region.crates) {
-          const marker = L.marker(crate.coordinates as L.LatLngExpression, {
-            icon: crateMarker,
-          }).bindPopup(`<div id="gallery"><img width="400px" src=${crate.image_url} alt=${crate.alt}>${crate.alt ? crate.alt : ""}</img></div>`).addTo(crateMarkers);
+          const resolveValue = crate.resolve ?? 6;
+          
+          if (!crateResolveLayers.has(resolveValue)) {
+            crateResolveLayers.set(resolveValue, new L.FeatureGroup())
+          }
+
+          if (typeof (crate as CrateDataGroup).group === "string") {
+            const crateGroup = crate as CrateDataGroup;
+            for (const subcrate of crateGroup.crates) {
+              createCrateMarker(subcrate, crateResolveLayers.get(resolveValue) as L.FeatureGroup, crateGroup.link || "");
+            }
+          } else {
+            createCrateMarker(crate as CrateData, crateResolveLayers.get(resolveValue) as L.FeatureGroup, "");
+          }
         }
       }
     }
 
     map.addLayer(airportMarkers);
+
+    function toggleMarkers() {
+      const mapZoom = map.getZoom();
+      crateResolveLayers.forEach((value, key) => {
+        if (mapZoom < key) {
+          map.removeLayer(value);
+        } else {
+          map.addLayer(value);
+        }
+      });
+    }
+    toggleMarkers();
     
     map.on('zoomend', (e) => {
-      if (map.getZoom() < 6) {
-        map.removeLayer(crateMarkers);
-      } else {
-        map.addLayer(crateMarkers);
-      }
+      toggleMarkers();
+      const pos = e.target.getCenter();
+      pushPositionHash(map.getZoom(), pos.lat, pos.lng);
     });
+
+    map.on('moveend', (e) => {
+      const pos = e.target.getCenter();
+      pushPositionHash(map.getZoom(), pos.lat, pos.lng);
+    })
+
     map.on('click', onMapClick);
   })
   

@@ -3,7 +3,6 @@ import type {DeckProps} from '@deck.gl/core';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import { TileLayer, type TileLayerProps } from '@deck.gl/geo-layers';
 import { BitmapLayer } from '@deck.gl/layers';
-import { PMTLayer } from '@maticoapp/deck.gl-pmtiles';
 import { Map, Layer, useControl, Source, Marker } from '@vis.gl/react-maplibre';
 
 const INITIAL_VIEW = {
@@ -35,13 +34,6 @@ function createAeroLayer(props: TileLayerProps) {
 }
 
 const layers = [
-  new PMTLayer({
-    id: 'basemap',
-    data: "https://r2.knownsh.cc/basemap.pmtiles",
-    maxZoom: 10,
-    minZoom: 7,
-    tileSize: 1024,
-  }),
   /*
   createAeroLayer({
     id: 'Basemap',

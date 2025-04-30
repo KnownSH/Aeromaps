@@ -1,148 +1,426 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+export const prerender = false;
+
+import Layout from "@/layouts/Layout.astro";
+import { getSession } from "auth-astro/server";
+import RunwayInput from "@/components/forms/RunwayInput.astro";
+import { inServer, type SessionDiscord } from "./index.astro";
+
+type MarkerNames =
+  | "airport"
+  | "major_airport"
+  | "small_airport"
+  | "airbase"
+  | "hidden_airport"
+  | "helipad";
+
+const markerMapHumanReadable: Record<MarkerNames, string> = {
+  airport: "Airport",
+  major_airport: "Major Airport (Star Icon)",
+  small_airport: "Small Airport",
+  airbase: "Airbase",
+  hidden_airport: "Hidden Airport",
+  helipad: "Helipad",
+};
+
+const session: SessionDiscord | null = await getSession(Astro.request);
+const verified = inServer(session as SessionDiscord);
+const errors = { coordinates: "", runway: "" };
+
+const sendWebhook = (screenshot_link: string, airportName: string, data: any) => {
+  try {
+    if (!verified) {
+      return null;
+    }
+    const user_id = session?.user?.id;
+    fetch(import.meta.env.DISCORD_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: `<@${user_id}>'s submission has been processed!`,
+        embeds: [{
+          color: 0xFFFFFF,
+          title: airportName,
+          author: {
+            name: `${session?.user?.name}'s Airport Data Submission'`,
+            icon_url: session?.user?.image,
+          },
+          fields: [{
+            name: "Important data for dergs:",
+            value: `\`\`\`json\n${JSON.stringify(data, null, 2)}\n\`\`\``,
+          }],
+          image: { url: screenshot_link || "https://cdn.discordapp.com/attachments/650570958343634969/1331218406946635909/RobloxPlayerBeta_GSJIqWOSbe.jpg?ex=6790d141&is=678f7fc1&hm=a6200394463131b4753344a54dd3713d1f3e22a62604ef9fa4a6ccb7a63ca541&" }
+        }],
+        allowed_mentions: { users: [user_id] }
+      })
+    });
+
+    return Astro.redirect("/");
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+};
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const coordinates = [Number(data.get("latitude")), Number(data.get("longitude"))];
+    const icao = data.get("icaoCode");
+    const airportName = data.get("airportName");
+    const airportID = data.get("airportId");
+    const elevation = data.get("elevation");
+    const marker = data.get("airportMarker");
+    const region = data.get("region");
+    const subregion = data.get("subregion");
+    const town = data.get("town");
+    const trelloLink = data.get("trelloLink");
+    const screenshotLink = data.get("screenshotLink");
+    const runways = data.get("runways");
+    const hasErrors = Object.values(errors).some(msg => msg);
+    if (!hasErrors) {
+      const airportData = {
+        coordinates: coordinates || "N/A",
+        icao: icao || "N/A",
+        name: `airport.${airportID}` || "N/A",
+        elevation: Number(elevation) || "N/A",
+        location: {
+          region: region || "N/A",
+          subregion: subregion || "N/A",
+          town: town || "N/A",
+        },
+        trello_card: trelloLink || "N/A",
+        marker_icon: marker || "N/A",
+        runways: runways !== null ? JSON.parse(runways as string) : "N/A",
+      };
+      sendWebhook(screenshotLink as string, airportName as string, airportData);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
 ---
 
 <Layout
   title="Aeromap Contributors"
   description="Add a missing airport to Aeronautimap"
 >
-  <h1>Submit a Airport for Aeromap</h1>
-  <form>
-    <div>
-      <label for="airportName">Name of Airport:</label>
-      <input
-        type="text"
-        id="airportName"
-        name="airportName"
-        placeholder="e.g., Webley Island Airfield"
-        required
-      />
-      <small>Properly capitalized.</small>
-    </div>
-    <div>
-      <label for="airportId">Airport ID:</label>
-      <input
-        type="text"
-        id="airportId"
-        name="airportId"
-        placeholder="e.g., webley"
-        required
-      />
-      <small>Lowercase identifier.</small>
-    </div>
-    <div>
-      <label for="icaoCode">ICAO Airport Code:</label>
-      <input
-        type="text"
-        id="icaoCode"
-        name="icaoCode"
-        placeholder="e.g., EGWJ"
-        required
-      />
-    </div>
-    <div class="autosuggest-container">
-      <label>Airport Location:</label>
-      <div>
-        <label for="region">Region:</label>
-        <input
-          type="text"
-          id="region"
-          name="region"
-          placeholder="Region name, e.g. 'Eastern Region'"
-          autocomplete="off"
-          required
-        />
-        <div
-          id="regionSuggestions"
-          class="autosuggest-dropdown"
-          style="display:none;"
-        >
-        </div>
-      </div>
-      <div>
-        <label for="subregion">Subregion:</label>
-        <input
-          type="text"
-          id="subregion"
-          name="subregion"
-          placeholder="Subregion name, e.g. 'East Anglia'"
-          autocomplete="off"
-          required
-        />
-        <div
-          id="subregionSuggestions"
-          class="autosuggest-dropdown"
-          style="display:none;"
-        >
-        </div>
-      </div>
-      <div>
-        <label for="town">Town:</label>
-        <input
-          type="text"
-          id="town"
-          name="town"
-          placeholder="Town name, e.g. 'Webley'"
-          autocomplete="off"
-          required
-        />
-        <div
-          id="townSuggestions"
-          class="autosuggest-dropdown"
-          style="display:none;"
-        >
-        </div>
-      </div>
-    </div>
-    <button>Submit</button>
-  </form>
+  <a href="../contribute" class="back-link">Go back to login page</a>
+  <div class="form-container">
+    {
+      session && verified ? (
+        <>
+          <h1 class="form-title">Submit an Airport for Aeromaps</h1>
+          <form class="airport-form" method="POST">
+            <div class="input-area">
+              <label for="airportName" class="input-label">
+                Name of Airport:
+              </label>
+              <input
+                type="text"
+                id="airportName"
+                name="airportName"
+                placeholder="e.g., Webley Island Airfield"
+                required
+                class="input-field"
+              />
+              <small class="input-tip">Properly capitalized.</small>
+            </div>
+            <div class="input-area">
+              <label for="airportId" class="input-label">
+                Airport ID:
+              </label>
+              <input
+                type="text"
+                id="airportId"
+                name="airportId"
+                placeholder="e.g., webley"
+                required
+                class="input-field"
+              />
+              <small class="input-tip">
+                Lowercase identifier, this is used as a "label" to track the
+                airport in the codebase.
+              </small>
+            </div>
+            <div class="input-area">
+              <label for="icaoCode" class="input-label">
+                ICAO Airport Code:
+              </label>
+              <input
+                type="text"
+                id="icaoCode"
+                name="icaoCode"
+                placeholder="e.g., EGWJ"
+                required
+                class="input-field"
+              />
+            </div>
+            <div class="input-area">
+              <label for="airportMarker" class="input-label">
+                Airport Marker:
+              </label>
+              <select
+                id="airportMarker"
+                name="airportMarker"
+                class="input-field"
+                required
+              >
+                {Object.entries(markerMapHumanReadable).map(([key, label]) => (
+                  <option value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <div class="input-area">
+              <label for="trelloLink" class="input-label">
+                Trello Card Link:
+              </label>
+              <input
+                type="text"
+                id="trelloLink"
+                name="trelloLink"
+                placeholder="Trello card URL"
+                class="input-field"
+              />
+            </div>
+            <div class="input-area">
+              <label for="screenshotLink" class="input-label">
+                Screenshot of Airport:
+              </label>
+              <input
+                type="text"
+                id="screenshotLink"
+                name="screenshotLink"
+                placeholder="Discord image link"
+                class="input-field"
+              />
+            </div>
+            <div class="input-area">
+              <label for="elevation" class="input-label">
+                Airport Elevation:
+              </label>
+              <input
+                type="number"
+                id="elevation"
+                name="elevation"
+                placeholder="e.g. 5.6"
+                step="any"
+                class="input-field"
+                required
+              />
+            </div>
+            <div class="input-area">
+              <label for="latitude" class="input-label">
+                Latitude:
+              </label>
+              <input
+                type="number"
+                id="latitude"
+                name="latitude"
+                placeholder="e.g. 52.12345"
+                step="any"
+                class="input-field"
+                required
+              />
+            </div>
+            <div class="input-area">
+              <label for="longitude" class="input-label">
+                Longitude:
+              </label>
+              <input
+                type="number"
+                id="longitude"
+                name="longitude"
+                placeholder="e.g., -0.12345"
+                step="any"
+                class="input-field"
+                required
+              />
+            </div>
+            <div class="autosuggest-container input-area">
+              <label class="input-label">Airport Location:</label>
+              <div class="location-input">
+                <label for="region" class="input-label small-label">
+                  Region:
+                </label>
+                <input
+                  type="text"
+                  id="region"
+                  name="region"
+                  placeholder="Region name, e.g. 'Land of Aesir'"
+                  autocomplete="off"
+                  required
+                  class="input-field"
+                />
+                <div
+                  id="regionSuggestions"
+                  class="autosuggest-dropdown"
+                  style="display:none;"
+                />
+              </div>
+              <div class="location-input">
+                <label for="subregion" class="input-label small-label">
+                  Subregion:
+                </label>
+                <input
+                  type="text"
+                  id="subregion"
+                  name="subregion"
+                  placeholder="Subregion name, e.g. 'South Abbostland'"
+                  autocomplete="off"
+                  required
+                  class="input-field"
+                />
+                <div
+                  id="subregionSuggestions"
+                  class="autosuggest-dropdown"
+                  style="display:none;"
+                />
+              </div>
+              <div class="location-input">
+                <label for="town" class="input-label small-label">
+                  Town:
+                </label>
+                <input
+                  type="text"
+                  id="town"
+                  name="town"
+                  placeholder="Town/City name, e.g. 'Tikaranto'"
+                  autocomplete="off"
+                  required
+                  class="input-field"
+                />
+                <div
+                  id="townSuggestions"
+                  class="autosuggest-dropdown"
+                  style="display:none;"
+                />
+                <small class="input-tip">Not needed in most cases.</small>
+              </div>
+            </div>
+            <RunwayInput />
+            <button class="submit-button">Submit</button>
+          </form>
+        </>
+      ) : (
+        <p class="verification-message">
+          You must verify before accessing this page
+        </p>
+      )
+    }
+  </div>
 </Layout>
 
 <style lang="less" is:inline>
-  .rjsf {
-    margin: 0 20%;
+  .form-container {
+    position: absolute;
+    left: 50%;
+    top: 80%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    padding: 2rem;
+    border: 2px solid white;
   }
 
-  legend {
-    font-size: x-large;
-    font-family: "silkscreen", sans-serif;
-    font-weight: bold;
-  }
-
-  .control-label {
-    font-family: "silkscreen", sans-serif;
-    padding-right: 0.5rem;
-  }
-
-  .form-group {
-    padding-top: 1.5rem;
-  }
-
-  .form-control {
-    margin-top: 0.3rem;
+  .back-link {
+    display: inline-block;
     color: white;
     background-color: black;
-    border-width: 2px;
-    border-color: white;
-    border-radius: 0.4rem;
+    border: 1px solid white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    margin-bottom: 1rem;
   }
 
-  .btn-info {
+  .back-link:hover {
+    background-color: #333;
+  }
+
+  .form-title {
+    font-family: "Jetbrains mono", sans-serif;
+    color: white;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .verification-message {
+    font-family: "Jetbrains mono", sans-serif;
+    color: white;
+    text-align: center;
+  }
+
+  .airport-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input-area {
+    margin-bottom: 1.2rem;
+  }
+
+  .input-label {
+    display: block;
+    font-family: "Jetbrains mono", sans-serif;
+    color: white;
+    margin-bottom: 0.3rem;
+  }
+
+  .small-label {
+    font-size: 0.9rem;
+  }
+
+  .input-field {
+    width: calc(100% - 12px);
+    padding: 0.5rem;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    font-family: "Jetbrains mono", sans-serif;
+  }
+
+  .input-field::placeholder {
+    color: #888;
+  }
+
+  .input-tip {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+  }
+
+  .location-input {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .autosuggest-container {
+  }
+
+  .submit-button {
     background-color: white;
     color: black;
-    margin: auto;
-    padding: 1rem;
-    font-family: "silkscreen";
-    font-weight: bold;
-    width: 100%;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    border-radius: 0.5rem;
+    padding: 0.7rem 1rem;
+    border: none;
+    cursor: pointer;
+    font-family: "Jetbrains mono", sans-serif;
+    align-self: flex-start;
+    transition: background-color 0.3s;
   }
 
-  pre,
-  code {
-    margin: 0 20%;
-    padding-bottom: 2rem;
+  .submit-button:hover {
+    background-color: #ddd;
+  }
+
+  .autosuggest-dropdown {
+    background-color: black;
+    border: 1px solid white;
+    color: white;
   }
 </style>

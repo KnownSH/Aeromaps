@@ -1,0 +1,180 @@
+---
+import type { Runway } from "../aeromap/types/MapTypes";
+
+interface Props {
+  initialRunways?: Runway[];
+}
+---
+
+<div class="runway-input-section" id="runway-input-component">
+  <h2 class="runway-header">Runways:</h2>
+  <div class="runway-input">
+    <input
+      type="text"
+      placeholder="e.g., 06/24"
+      class="runway-input-field"
+      id="runway-number-input"
+    />
+    <input
+      type="text"
+      placeholder="Length"
+      class="runway-input-field"
+      id="runway-length-input"
+    />
+    <button id="add-runway-button" type="button" class="add-runway-button"> + </button>
+  </div>
+  <div id="runway-list" class="runway-list"></div>
+  <input type="hidden" name="runways" id="runways-input">
+</div>
+<script>
+  interface Runway {
+    number: string,
+    length: number,
+  }
+
+  const component = document.getElementById("runway-input-component");
+  if (component) {
+    const runways = JSON.parse(localStorage.getItem("runways") || "[]");
+    const runwayList = document.getElementById("runway-list");
+    const numberInput = document.getElementById("runway-number-input");
+    const lengthInput = document.getElementById("runway-length-input");
+    const addButton = document.getElementById("add-runway-button");
+    const runwaysInput = document.getElementById('runways-input') as HTMLInputElement;
+    const renderRunways = (runways: Runway[]) => {
+      if (!runwayList) return;
+      runwayList.innerHTML = "";
+      if (runways.length == 0) {
+        const noRunways = document.createElement("p");
+        noRunways.classList.add("no-runways");
+        noRunways.textContent = "No runways added.";
+        runwayList.appendChild(noRunways);
+        return;
+      }
+      const ul = document.createElement("ul");
+      runways.forEach((runway, index) => {
+        const li = document.createElement('li');
+        li.classList.add('runway-item');
+        const numberSpan = document.createElement('span');
+        numberSpan.classList.add('runway-number');
+        numberSpan.textContent = `Runway ${runway.number}`;
+        const lengthSpan = document.createElement('span');
+        lengthSpan.classList.add('runway-length');
+        lengthSpan.textContent = ` Length: ${runway.length}`;
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = "X";
+        deleteButton.classList.add('runway-delete-button');
+        deleteButton.type = "button";
+        deleteButton.addEventListener('click', () => {
+          runways.splice(index, 1);
+          localStorage.setItem('runways', JSON.stringify(runways));
+          updateHiddenInput(runways)
+          renderRunways(runways);
+        })
+        li.appendChild(numberSpan);
+        li.appendChild(lengthSpan);
+        li.appendChild(deleteButton)
+        ul.appendChild(li);
+      });
+      runwayList.appendChild(ul);
+    };
+    const updateHiddenInput = (runways: Runway[]) => {
+      if (runwaysInput) {
+        runwaysInput.value = JSON.stringify(runways);
+      }
+    };
+    updateHiddenInput(runways);
+    renderRunways(runways);
+    addButton?.addEventListener("click", () => {
+      if (!numberInput?.value || !lengthInput?.value) {
+        return;
+      }
+      const newRunway = {
+        number: numberInput.value,
+        length: lengthInput.value,
+      };
+      runways.push(newRunway);
+      localStorage.setItem("runways", JSON.stringify(runways));
+      updateHiddenInput(runways);
+      renderRunways(runways);
+      numberInput.value = "";
+      lengthInput.value = "";
+    });
+  }
+</script>
+<style lang="less" is:inline>
+  .runway-input-section {
+      margin-bottom: 1.2rem;
+  }
+
+  .runway-header {
+    font-family: 'Jetbrains mono', sans-serif;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .runway-input {
+      display: flex;
+  }
+
+  .runway-input-field {
+    width: calc(50% - 0.5rem); // Two inputs side-by-side
+    padding: 0.5rem;
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    font-family: 'Jetbrains mono', sans-serif;
+  }
+  
+  .runway-input-field::placeholder{
+      color: #888;
+  }
+
+  .add-runway-button {
+    background-color: white;
+    color: black;
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-family: 'Jetbrains mono', sans-serif;
+    align-items: center;
+    width: 2rem;
+    height: 2.5rem;
+    margin-left: 0.5rem;
+  }
+
+  .add-runway-button:hover {
+      background-color: #ddd;
+  }
+  
+  .runway-list {
+      margin-top: 0.5rem;
+  }
+  .no-runways {
+    font-family: 'Jetbrains mono', sans-serif;
+    color: #888;
+  }
+  
+  .runway-item {
+    margin-bottom: 0.2rem;
+    font-family: 'Jetbrains mono', sans-serif;
+    color: white;
+    padding: 0.2rem;
+    border: 1px solid white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .runway-delete-button{
+      background-color: red;
+      color: white;
+      border: none;
+      font-family: 'Jetbrains mono', sans-serif;
+      padding: 0.1rem 0.5rem;
+      cursor: pointer;
+  }
+  
+  .runway-delete-button:hover{
+      background-color: darkred;
+  }
+</style>

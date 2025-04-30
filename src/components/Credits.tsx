@@ -53,6 +53,7 @@ export default function Credits({ lang }: CreditsProps) {
               <section className='w-[50%]'>
                 <span className='font-bold text-lg'>{t("credits.translators")}</span>
                 <ul style={{fontSize: "0.8em"}}>
+                  <li>aircraftncarlover</li>
                   <li>ChoTe2171*</li>
                   <li>FlyingTankersYT*</li>
                   <li>Nonsopro</li>
@@ -65,6 +66,8 @@ export default function Credits({ lang }: CreditsProps) {
                 <ul style={{fontSize: "0.8em"}}>
                   <li>dawg888</li>
                   <li>dragoltfang</li>
+                  <li>myater_9390</li>
+                  <li>VastAttorney822</li>
                 </ul>
               </section>
             </div>

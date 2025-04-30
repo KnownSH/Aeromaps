@@ -1,6 +1,7 @@
 ---
 export const prerender = false;
 
+import React from "react";
 import Layout from "../layouts/Layout.astro";
 import AeroMapEmbedImage from "../assets/aeromaps-preview.png";
 import AeroMap from "../components/aeromap/AeroMap";
@@ -27,22 +28,24 @@ const location = Astro.url.hostname;
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image:src" content={AeroMapEmbedImage.src}>
   </Fragment>
-  <header id="logo" class="flex mt-3 p-3 text-center">
-    <LanguagePicker client:only="react" languageChoosen={lang} />
-    <section>
-      <img class="h-12 m-auto" src={`/aeromap-logos/${t("main.logo.url")}`} alt="Aeromaps" />
-      <h1 class="text-orange-300 font-black">{location == "localhost" ? "🔨 Development Preview (Not on actual website) 🔨" : ""}</h1>
+  <header id="logo" class="flex items-center justify-between mt-3 p-3">
+    <div class="w-1/4"></div>
+    <section class="flex flex-col items-center w-1/2"> 
+      <img class="h-12" src={`/aeromap-logos/${t("main.logo.url")}`} alt="Aeromaps" />
+      <h1 class="text-orange-300 font-black text-sm">
+        {location == "localhost" ? "🔨 Development Preview (Not on actual website) 🔨" : ""}
+      </h1>
     </section>
-    <section class="flex ml-auto">
-      <a href="/" class="font-thin text-xs hover:text-blue-400">{t("main.watermark")}</a>
-      <!--Image class="w-[70px] object-contain"src={Dorg} alt="dorg"/-->
-    </section>
+    <div class="flex items-center w-1/4 justify-end">
+      <LanguagePicker client:only="react" languageChoosen={lang} />
+      <a href="/" class="ml-4 font-thin text-xs hover:text-blue-400">{t("main.watermark")}</a>
+    </div>
   </header>
   <!--NewMap client:only="react" -->
-  <AeroMap client:only="react" server:defer lang={lang}/>
+  <AeroMap client:only="react" lang={lang}/>
   <footer class="mr-auto ml-auto mt-3 text-center">
     <section>
-      <a href="https://derg.space/contribute/airports">{t("main.contribute")}</a>
+      <a href="/contribute">{t("main.contribute")}</a>
       <Credits lang={lang} client:only="react"/>
     </section>
   </footer>
@@ -54,6 +57,12 @@ const location = Astro.url.hostname;
 
   #modal.open {
     right: 0;
+  }
+
+  .crate-image {
+    width: 500px;
+    object-fit: contain;
+    overflow: hidden;
   }
 
   .icon-info {
@@ -72,6 +81,11 @@ const location = Astro.url.hostname;
 
   .logo-container {
     position: relative;
+  }
+
+  .nodata {
+    font-size: 0.8em;
+    font-weight: 100;
   }
 
   #modal {

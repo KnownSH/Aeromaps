@@ -55,7 +55,7 @@ const Oconia = createRegion({
       elevation: 2.7,
       runway: "6/27,18/36",
       runway_length: 2135,
-      marker_icon: "airport",
+      marker_icon: "major_airport",
       trello_card: "https://trello.com/c/vtI1Emqw",
       image_url: "https://trello.com/1/cards/6129057233668d2bb78d68fb/attachments/6301ef7c4577606a5bb629db/download/IMG_20220821_113744.png",
       based_on: "LaGuardia International Airport",
@@ -154,8 +154,8 @@ const Oconia = createRegion({
       name: "airport.enoksen",
       elevation: 53,
       location: {
-        region: "region.r.enoksen",
-        town: "region.town.enoksen",
+        region: "region.town.enoksen",
+        town: "region.r.enoksen",
       },
       image_url: "/aeromap-assets/enoksen.png",
       trello_card: "https://trello.com/c/ljSqLhfL",
@@ -216,7 +216,7 @@ const Oconia = createRegion({
       logo: "/aeromap-logos/Kitesboro.svg",
       image_url: "https://trello.com/1/cards/6129057233668d2bb78d68f9/attachments/642cf505c9e9d638e9fe7c52/download/Kitesboro_Remodel.png",
       trello_card: "https://trello.com/c/1XK40PfY",
-      marker_icon: "airport",
+      marker_icon: "major_airport",
       runway_length: 2865,
       runway: "12/29",
     }),
@@ -328,7 +328,7 @@ const Oconia = createRegion({
       },
       image_url: "/aeromap-assets/lynwood.png",
       trello_card: "https://trello.com/c/UMehb9ZV",
-      marker_icon: "airport",
+      marker_icon: "airbase",
       runway_length: 2744,
       runway: "09/27,15/33",
     }),
@@ -372,7 +372,7 @@ const Oconia = createRegion({
         -61.073237,
         156.801152
       ],
-      icao: "ATOM",
+      icao: "LFVI",
       name: "airport.valois",
       elevation: 7,
       location: {
@@ -486,71 +486,329 @@ const Oconia = createRegion({
         region: "region.r.oconia-southern",
         subregion: "region.sr.augustus",
       },
-      image_url: "/aeromap-assets/lynwoodmuni.png",
+      image_url: "/aeromap-assets/augustus.jpg",
       trello_card: "https://trello.com/c/ugnVivAR",
       marker_icon: "airport",
       runway_length: 3645,
       runway: "16/36",
     }),
+    createAirport({
+      coordinates: [
+        50.454483,
+        114.391705
+      ],
+      icao: "CTIK",
+      name: "airport.tikaranto",
+      elevation: 5,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south",
+        town: "region.town.tikaranto"
+      },
+      image_url: "/aeromap-assets/tikaranto.png",
+      trello_card: "https://trello.com/c/6WwMjCq4",
+      marker_icon: "major_airport",
+      runway: "16R/34L, 07C/25C, 07L/25R, 16L/34R, 07R/25L",
+      runway_length: 3390
+    }),
+    createAirport({
+      coordinates: [
+        49.812692, 
+        112.538673
+      ],
+      icao: "CTCA",
+      name: "airport.tikaranto-city",
+      elevation: 5,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south",
+        town: "region.town.tikaranto"
+      },
+      image_url: "/aeromap-assets/tikaranto-city.jpg",
+      trello_card: "https://trello.com/c/D3TcxZhe",
+      marker_icon: "airport",
+      runway: "13/31, 15/33",
+      runway_length: 1388
+    }),
+    createAirport({
+      coordinates: [
+        54.910269, 
+        112.099075
+      ],
+      icao: "ESRB",
+      name: "airport.base23",
+      elevation: 6.4,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south"
+      },
+      image_url: "/aeromap-assets/base23.jpg",
+      trello_card: "https://trello.com/c/KYBoC561",
+      marker_icon: "hidden_airport",
+      runway: "N/A",
+      runway_length: 810,
+    }),
+    createAirport({
+      coordinates: [
+        55.760259, 
+        110.028011
+      ],
+      icao: "CNJO",
+      name: "airport.sunrise",
+      elevation: 8.8,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south"
+      },
+      image_url: "/aeromap-assets/sunrise.jpg",
+      trello_card: "https://trello.com/c/JXeu9BT7",
+      marker_icon: "hidden_airport",
+      runway: "N/A",
+      runway_length: 300,
+    }),
+    createAirport({
+      coordinates: [
+        51.969981, 
+        114.535249
+      ],
+      icao: "N/A",
+      name: "airport.tikaranto-abandoned",
+      elevation: 6,
+      nodata: true,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south",
+        town: "region.town.tikaranto"
+      },
+      image_url: "/aeromap-assets/tikabandoned.png",
+      trello_card: "https://trello.com/c/JXeu9BT7",
+      marker_icon: "hidden_airport",
+      runway: "07/25",
+      runway_length: 490,
+    }),
+    createAirport({
+      coordinates: [
+        56.646397, 
+        113.493956
+      ],
+      icao: "ESID",
+      name: "airport.idea",
+      elevation: 5.8,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south"
+      },
+      image_url: "/aeromap-assets/idea.jpg",
+      trello_card: "https://trello.com/c/x3ikaKaX",
+      marker_icon: "hidden_airport",
+      runway: "18",
+      runway_length: 440,
+    }),
+    createAirport({
+      coordinates: [
+        59.531334, 
+        108.308456
+      ],
+      icao: "CFFL",
+      name: "airport.kerfuffle",
+      elevation: 990,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south"
+      },
+      image_url: "/aeromap-assets/kerfuffle.jpg",
+      trello_card: "https://trello.com/c/uj8zVKoY",
+      marker_icon: "hidden_airport",
+      runway: "N/A",
+      runway_length: 200,
+    }),
+    createAirport({
+      coordinates: [
+        57.537067, 
+        103.277322
+      ],
+      icao: "CMJA",
+      name: "airport.brunswick",
+      elevation: 5.8,
+      location: {
+        region: "region.r.aesir",
+        subregion: "region.sr.abbostland-south"
+      },
+      image_url: "/aeromap-assets/brunswick.jpg",
+      trello_card: "https://trello.com/c/Ak6UerrQ",
+      marker_icon: "hidden_airport",
+      runway: "N/A",
+      runway_length: 250,
+    }),
   ],
   crates: [
     {
-      "coordinates": [7.710332, -10.491943],
-      "image_url": "/aeromap-assets/webley-island/crateloc1.jpg"
+      coordinates: [7.710332, -10.491943],
+      image_url: "/aeromap-assets/webley-island/crateloc1.jpg"
     },
     {
-      "coordinates": [7.969496, -10.0978093],
-      "image_url": "/aeromap-assets/webley-island/crateloc2.jpg"
+      coordinates: [7.969496, -10.0978093],
+      image_url: "/aeromap-assets/webley-island/crateloc2.jpg"
     },
     {
-      "coordinates": [7.702528, -10.119438],
-      "image_url": "/aeromap-assets/webley-island/crateloc3.jpg"
-    },
-
-    {
-      "coordinates": [0.186905, 10.374653],
-      "image_url": "/crates/clarence1.avif",
+      coordinates: [7.702528, -10.119438],
+      image_url: "/aeromap-assets/webley-island/crateloc3.jpg"
     },
     {
-      "coordinates": [-1.70224, 8.265832],
-      "image_url": "/crates/clarence2.avif",
+      group: "clarence",
+      resolve: 5,
+      crates: [
+        {
+          coordinates: [0.186905, 10.374653],
+          image_url: "/crates/clarence1.avif",
+        },
+        {
+          coordinates: [-1.70224, 8.265832],
+          image_url: "/crates/clarence2.avif",
+        },
+        {
+          coordinates: [3.395792, 9.230698],
+          image_url: "/crates/clarence3.avif",
+        },
+        {
+          coordinates: [0.101882, 10.351581],
+          image_url: "/crates/clarence4.avif",
+        },
+        {
+          coordinates: [-1.413167, 9.021163],
+          image_url: "/crates/clarence5.avif",
+        },
+        {
+          coordinates: [-1.221517, 8.498577],
+          image_url: "/crates/clarence6.avif",
+        },
+        {
+          coordinates: [-1.221517, 8.498577],
+          image_url: "/crates/clarence6.avif",
+        },
+        {
+          coordinates: [-1.713743, 8.248269],
+          image_url: "/crates/clarence7.avif",
+        },
+        {
+          coordinates: [0.613525, 6.947565],
+          image_url: "/crates/clarence8.avif",
+        },
+        {
+          coordinates: [0.292622, 5.826908],
+          image_url: "/crates/clarence9.avif",
+        },
+        {
+          coordinates: [4.477674, 9.483551],
+          image_url: "/crates/clarence10.avif",
+        }
+      ]
     },
     {
-      "coordinates": [3.395792, 9.230698],
-      "image_url": "/crates/clarence3.avif",
+      group: "aesir",
+      resolve: 3,
+      link: "/crates/",
+      crates: [
+        {
+          coordinates: [48.704641, 112.547055],
+          image_url: "aesir1.avif",
+        },
+        {
+          coordinates: [73.459971, 87.874302],
+          image_url: "aesir2.avif",
+        },
+        {
+          coordinates: [61.737472, 117.052019],
+          image_url: "aesir3.avif",
+        },
+        {
+          coordinates: [50.022627, 113.093486],
+          image_url: "aesir4.avif"
+        },
+        {
+          coordinates: [50.319246, 112.962922],
+          image_url: "aesir5.avif",
+        },
+        {
+          coordinates: [74.661292, 66.265285],
+          image_url: "aesir6.avif",
+        },
+        {
+          coordinates: [78.379522, 60.629126],
+          image_url: "aesir7.avif",
+        },
+        {
+          coordinates: [76.62863, 82.929422],
+          image_url: "aesir8.avif",
+        },
+        {
+          coordinates: [78.668373, 63.370615],
+          image_url: "aesir9.avif",
+        },
+        {
+          coordinates: [76.230786, 25.430893],
+          image_url: "aesir10.avif",
+        },
+        {
+          coordinates: [51.667743, 113.609628],
+          image_url: "aesir11.avif",
+        },
+        {
+          coordinates: [61.613046, 115.171223],
+          image_url: "aesir12.avif",
+        },
+        {
+          coordinates: [61.525179, 97.914817],
+          image_url: "aesir13.avif",
+        },
+        {
+          coordinates: [70.163564, 82.849487],
+          image_url: "aesir14.avif",
+          description: "<font color='red'><b>IMPORTANT:</b> This crate cannot be obtained without glitching</font>",
+        },
+        {
+          coordinates: [78.270844, 59.620046],
+          image_url: "aesir15.avif",
+          alt: "Added by: FlyingTankersYT",
+        },
+        {
+          coordinates: [76.818278, 21.806171],
+          image_url: "aesir16.avif",
+          alt: "Added by: VastAttorney822",
+        },
+        {
+          coordinates: [51.94048, 114.58492],
+          image_url: "aesir17.avif",
+        }
+      ]
     },
     {
-      "coordinates": [0.101882, 10.351581],
-      "image_url": "/crates/clarence4.avif",
-    },
-    {
-      "coordinates": [-1.413167, 9.021163],
-      "image_url": "/crates/clarence5.avif",
-    },
-    {
-      "coordinates": [-1.221517, 8.498577],
-      "image_url": "/crates/clarence6.avif",
-    },
-    {
-      "coordinates": [-1.221517, 8.498577],
-      "image_url": "/crates/clarence6.avif",
-    },
-    {
-      "coordinates": [-1.713743, 8.248269],
-      "image_url": "/crates/clarence7.avif",
-    },
-    {
-      "coordinates": [0.613525, 6.947565],
-      "image_url": "/crates/clarence8.avif",
-    },
-    {
-      "coordinates": [0.292622, 5.826908],
-      "image_url": "/crates/clarence9.avif",
-    },
-    {
-      "coordinates": [4.477674, 9.483551],
-      "image_url": "/crates/clarence10.avif",
-    },
+      group: "enoksen",
+      resolve: 3,
+      link: "/crates/enoksen/",
+      crates: [
+        {
+          coordinates: [74.217329, -2.419337],
+          image_url: "1.avif"
+        },
+        {
+          coordinates: [73.702831, 5.715526],
+          image_url: "2.avif",
+        },
+        {
+          coordinates: [74.406628, -0.05807],
+          image_url: "3.avif",
+        },
+        {
+          coordinates: [74.758153, -9.509069],
+          image_url: "4.avif",
+        },
+        {
+          coordinates: [74.712382, -10.685005],
+          image_url: "5.avif"
+        }
+      ],
+    }
   ]
 })
 

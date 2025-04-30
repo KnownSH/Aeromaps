@@ -24,6 +24,7 @@
   "infobox.alt-text-0": "Image of",
   "infobox.alt-text-1": "Logo of",
   "infobox.unofficial": "Unofficial",
+  "infobox.nodata": "You cannot park at this airport.",
 
   "region.r.oconia-central": "Central Oconia",
   "region.r.oconia-southern": "Southern Oconia",
@@ -83,6 +84,7 @@
   "region.town.enoksen": "Enoksen",
   "region.town.udyanapura-merlani": "Udyanapura Merlani",
   "region.town.newengland": "New Englandtown",
+  "region.town.tikaranto": "Tikaranto",
 
   "airport.umibutsu": "Umibutsu International Airport",
   "airport.kapa": "Kapa Airport",
@@ -117,5 +119,13 @@
   "airport.pembroke": "Pembroke Plantation",
   "airport.rawaki": "Rawaki International Airport",
   "airport.lynwoodmuni": "Lynwood Municipal Airport",
-  "airport.augustus": "Augustus Atoll Airport"
+  "airport.augustus": "Augustus Atoll Airport",
+  "airport.tikaranto": "Tikaranto International Airport",
+  "airport.tikaranto-city": "Tikaranto City Airport",
+  "airport.tikaranto-abandoned": "Old Tikaranto Airfield",
+  "airport.base23": "Base 23 Road Airstrip",
+  "airport.sunrise": "Sunrise Hills Airfield",
+  "airport.idea": "Idéa Airfield",
+  "airport.kerfuffle": "Kerfuffle Campsite Bushfield",
+  "airport.brunswick": "Brunswick Depot Airstrip"
 }

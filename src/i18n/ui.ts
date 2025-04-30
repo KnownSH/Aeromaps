@@ -1,17 +1,21 @@
-import en from "./en.json";
-import fr from "./fr.json";
-import th from "./th.json";
-import kr from "./kr.json";
-import it from "./it.json";
-import de from "./de.json";
+import en from "./locales/en.json";
+import fr from "./locales/fr.json";
+import th from "./locales/th.json";
+import ko from "./locales/ko.json";
+import it from "./locales/it.json";
+import de from "./locales/de.json";
+import eu from "./locales/eu.json";
+import es from "./locales/es.json";
 
 export const languages = {
   en: "English",
   fr: "Français",
   th: "ภาษาไทย",
-  kr: "한국어",
+  ko: "한국어",
   it: "Italiano",
-  de: "Deutsch"
+  de: "Deutsch",
+  eu: "Euskara",
+  es: "Español",
 };
 
 export const defaultLang = 'en';
@@ -20,7 +24,9 @@ export const ui = {
   en,
   fr,
   th,
-  kr,
+  ko,
   it,
-  de
+  de,
+  eu,
+  es
 };
